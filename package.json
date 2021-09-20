@@ -1,5 +1,5 @@
 {
-  "name": "build-week-scaffolding-node",
+  "name": "ft-pp4-backend",
   "version": "1.0.0",
   "scripts": {
     "start": "node index.js",
