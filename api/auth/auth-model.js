@@ -1,19 +1,30 @@
-const db = require("../data/db-config");
+const db = require('../data/db-config');
 
-function find() {
+function getAllUsers() {
   return db("users");
 }
 
-const getByUsername = (username) => {
-  return db("users").where("email", "=", username).first();
+const findByEmail = (email) => {
+  return db('users')
+    .where('users.email', email)
+    .first();
 };
 
-function add(user) {
-  return db("users").returning(["id", "username", "password"]).insert(user);
+function findById(id) {
+  return db('users')
+      .where('users.user_id', id)
+      .first();
+}
+
+function addNewUser(newUser) {
+  return db("users")
+    .returning(['user_id', 'email', 'first_name', 'last_name'])
+    .insert(newUser);
 }
 
 module.exports = {
-  find,
-  getByUsername,
-  add,
+  getAllUsers,
+  findByEmail,
+  findById,
+  addNewUser,
 };
