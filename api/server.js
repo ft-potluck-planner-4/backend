@@ -1,7 +1,27 @@
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
-const authRouter = require("./auth/auth-router.js");
+
+const restrict = require('./middleware/restricted');
+
+const authRouter = require('./auth/auth-router');
+const organizerRouter = require('./organizer/organizer-router')
+
+const server = express();
+
+server.use(helmet());
+server.use(cors());
+server.use(express.json());
+
+server.use('/api/auth', authRouter);
+server.use('/api/organizer', restrict, organizerRouter);
+
+server.use((err, req, res, next) => { // eslint-disable-line
+    res.status(err.status || 500).json({
+      message: err.message
+    });
+  });
+
 // const db = require("./data/db-config");
 
 // function getAllUsers() { return db('users') }
@@ -13,13 +33,6 @@ const authRouter = require("./auth/auth-router.js");
 //   const [newUserObject] = await db('users').insert(user, ['user_id', 'password'])
 //   return newUserObject // { user_id: 7, username: 'foo', password: 'xxxxxxx' }
 // }
-
-const server = express();
-server.use(express.json());
-server.use(helmet());
-server.use(cors());
-
-server.use("/api/auth", authRouter);
 
 // server.get("/api/users", async (req, res) => {
 //   res.json(await getAllUsers())
