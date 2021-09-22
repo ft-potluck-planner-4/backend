@@ -4,6 +4,44 @@ const jwt = require("jsonwebtoken");
 const users = require("./auth-model");
 const { jwtSecret } = require("../config/secrets");
 
+router.get("/", (req, res) => {
+  users
+    .find(req.query)
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({
+        message: "The posts information could not be retrieved",
+      });
+    });
+});
+
+router.get("/test", (req, res) => {
+  res.status(200).json(req.body.password);
+});
+
+router.get("/logout", (req, res) => {
+  if (req.session.user) {
+    req.session.destroy((err) => {
+      if (err) {
+        res.json({
+          message: "err, you cannot leave",
+        });
+      } else {
+        res.json({
+          message: "bye!",
+        });
+      }
+    });
+  } else {
+    res.json({
+      message: "you were not logged in to begin with",
+    });
+  }
+});
+
 router.post("/register", async (req, res) => {
   if (!req.body.username || !req.body.password) {
     res.status(400).json({ message: "username and password required" });
