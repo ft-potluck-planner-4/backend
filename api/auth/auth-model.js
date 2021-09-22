@@ -1,7 +1,11 @@
 const db = require("../data/db-config");
 
+function find() {
+  return db("users");
+}
+
 const getByUsername = (username) => {
-  return db("users").where("username", "=", username).first();
+  return db("users").where("email", "=", username).first();
 };
 
 function add(user) {
@@ -9,6 +13,7 @@ function add(user) {
 }
 
 module.exports = {
+  find,
   getByUsername,
   add,
 };
