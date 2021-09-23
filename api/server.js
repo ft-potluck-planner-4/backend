@@ -6,6 +6,8 @@ const restrict = require('./middleware/restricted');
 
 const authRouter = require('./auth/auth-router');
 const organizerRouter = require('./organizer/organizer-router')
+const potluckRouter = require('./potluck/potluck-router')
+const guestRouter = require('./guest/guest-router')
 
 const server = express();
 
@@ -14,7 +16,15 @@ server.use(cors());
 server.use(express.json());
 
 server.use('/api/auth', authRouter);
-server.use('/api/organizer', restrict, organizerRouter);
+server.use('/api/organizer', organizerRouter);
+// REPLACE WITH BELOW ONCE HOOKED UP WITH FRONTEND 
+// server.use('/api/organizer', restrict, organizerRouter);
+server.use('/api/potluck', potluckRouter);
+// REPLACE WITH BELOW ONCE HOOKED UP WITH FRONTEND 
+// server.use('/api/potluck', restrict, potluckRouter);
+server.use('/api/guest', guestRouter);
+// REPLACE WITH BELOW ONCE HOOKED UP WITH FRONTEND 
+// server.use('/api/guest', restrict, guestRouter);
 
 server.use((err, req, res, next) => { // eslint-disable-line
     res.status(err.status || 500).json({
