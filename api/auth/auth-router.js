@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const models = require("./auth-model");
 const {
   checkEmailExists,
   checkEmailFree,
@@ -10,22 +11,13 @@ const tokenBuilder = require("./token-builder");
 const bcrypt = require("bcryptjs");
 const User = require("./auth-model");
 
-// router.get("/", (req, res) => {
-//   users
-//     .find(req.query)
-//     .then((posts) => {
-//       res.status(200).json(posts);
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//       res.status(500).json({
-//         message: "The posts information could not be retrieved",
-//       });
-//     });
-// });
-
 router.get("/test", (req, res) => {
   res.status(200).json({ message: "this is a test endpoint" });
+});
+
+router.get("/:id", async (req, res) => {
+  const result = await models.findById(req.params.id);
+  res.status(200).json(result);
 });
 
 router.post(
@@ -61,24 +53,18 @@ router.post("/login", validateLoginCred, checkEmailExists, (req, res, next) => {
   }
 });
 
-// router.get("/logout", (req, res, next) => {
-//   if (req.headers.authorization) {
-//     req.headers.authorization.destroy((err) => {
-//       if (err) {
-//         res.json({
-//           message: 'An error occurred logging out. Please try again.',
-//         });
-//       } else {
-//         res.json({
-//           message: "Logout successful",
-//         });
-//       }
-//     });
-//   } else {
-//     res.json({
-//       message: "You cannot log out because you were not logged in to begin with",
-//     });
-//   }
-// });
+router.get("/logout", (req, res, next) => {
+  req.headers.authorization.destroy((err) => {
+    if (err) {
+      res.json({
+        message: "An error occurred logging out. Please try again.",
+      });
+    } else {
+      res.json({
+        message: "Logout successful",
+      });
+    }
+  });
+});
 
 module.exports = router;
